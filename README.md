@@ -56,13 +56,15 @@ The game is designed to be **simple, fair, and fully playable** without any pay-
 
 ---
 
-## 🧠 Philosophy
+## Project Philosophy
 
-Seeker Ball is built with a **long-term builder mindset**:
-- Clean commits
-- No farming
-- No shortcuts
-- Real playable progress
+Seeker Ball is designed as a simple, fair, mobile-first game with a strong focus on gameplay clarity and long-term quality.
+
+The project is developed in small, iterative steps with public commits to ensure transparency, maintainability, and a clean development history.
+There are no pay-to-win mechanics — all gameplay-relevant elements are earned through play.
+
+The goal is to ship a complete, polished game that feels native to a mobile-first ecosystem.
+
 
 ---
 
