@@ -16,6 +16,14 @@ const btnNft = document.getElementById("btnNft");
 const btnSettings = document.getElementById("btnSettings");
 
 const btnBackFromDaily = document.getElementById("btnBackFromDaily");
+// Daily challenge UI
+const dailyTitleEl = document.getElementById("dailyTitle");
+const dailyDescEl = document.getElementById("dailyDesc");
+const dailyProgressEl = document.getElementById("dailyProgress");
+const dailyRewardEl = document.getElementById("dailyReward");
+const dailyStatusEl = document.getElementById("dailyStatus");
+const dailyClaimBtn = document.getElementById("dailyClaimBtn");
+
 const btnBackFromShop = document.getElementById("btnBackFromShop");
 const btnBackFromNft = document.getElementById("btnBackFromNft");
 const btnBackFromSettings = document.getElementById("btnBackFromSettings");
@@ -106,6 +114,80 @@ function addXP(amount) {
   totalXP += amount;
   saveNumber("totalXP", totalXP);
   updateShopXPUI();
+}
+
+// ---------------------
+// Daily Challenge (ONLY what we discussed)
+// - one daily challenge per day
+// - progress is best time survived today (seconds)
+// - claim once per day for XP reward
+// ---------------------
+function todayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+let daily = loadJSON("dailyState", null);
+
+function ensureDaily() {
+  const key = todayKey();
+  if (!daily || daily.dateKey !== key) {
+    daily = {
+      dateKey: key,
+      targetSec: 30,
+      rewardXP: 250,
+      bestSec: 0,
+      claimed: false
+    };
+    saveJSON("dailyState", daily);
+  }
+  return daily;
+}
+
+function saveDaily() {
+  saveJSON("dailyState", daily);
+}
+
+function updateDailyUI() {
+  ensureDaily();
+  if (!dailyTitleEl) return;
+
+  dailyTitleEl.textContent = "Survive Run";
+  dailyDescEl.textContent = `Survive ${daily.targetSec} seconds in one run.`;
+  dailyProgressEl.textContent = `${Math.min(daily.bestSec, daily.targetSec)} / ${daily.targetSec}`;
+  dailyRewardEl.textContent = `${daily.rewardXP} XP`;
+
+  const done = daily.bestSec >= daily.targetSec;
+
+  if (daily.claimed) {
+    dailyStatusEl.textContent = "✅ Already claimed today.";
+    dailyClaimBtn.disabled = true;
+    dailyClaimBtn.textContent = "Claimed";
+  } else if (done) {
+    dailyStatusEl.textContent = "✅ Completed! You can claim your reward.";
+    dailyClaimBtn.disabled = false;
+    dailyClaimBtn.textContent = `Claim ${daily.rewardXP} XP`;
+  } else {
+    dailyStatusEl.textContent = "Play runs to improve your best time today.";
+    dailyClaimBtn.disabled = true;
+    dailyClaimBtn.textContent = "Claim";
+  }
+}
+
+if (dailyClaimBtn) {
+  dailyClaimBtn.addEventListener("click", () => {
+    ensureDaily();
+    if (daily.claimed) return;
+    if (daily.bestSec < daily.targetSec) return;
+
+    addXP(daily.rewardXP);
+    daily.claimed = true;
+    saveDaily();
+    updateDailyUI();
+  });
 }
 
 // ---------------------
@@ -361,6 +443,7 @@ function openDaily() {
   state = "daily";
   overlay.classList.add("hidden");
   ui.classList.remove("hidden");
+  updateDailyUI(); // ✅ only addition: refresh daily screen UI
   showOnly(screenDaily);
   stopMove();
 }
@@ -597,9 +680,8 @@ function drawBallSeam(x, y, r) {
   const spacing = r * 0.55;
 
   // Continuous offset (no sin, no back/forth)
- const offRaw = rollTexSmooth * 0.35;
- const off = ((offRaw % spacing) + spacing) % spacing; // ✅ wrap 0..spacing (keine Unsichtbarkeit)
-
+  const offRaw = rollTexSmooth * 0.35;
+  const off = ((offRaw % spacing) + spacing) % spacing; // ✅ wrap 0..spacing (keine Unsichtbarkeit)
 
   ctx.lineWidth = 2;
 
@@ -777,6 +859,17 @@ function update(dt) {
       break;
     }
   }
+
+  // Daily progress update (best time survived today)
+  ensureDaily();
+  if (!daily.claimed) {
+    const secs = Math.floor(timeAlive);
+    if (secs > daily.bestSec) {
+      daily.bestSec = secs;
+      saveDaily();
+      // (UI update only when you open Daily screen)
+    }
+  }
 }
 
 function drawHUD(spd) {
@@ -841,14 +934,6 @@ function openMenu() {
   overlay.classList.add("hidden");
   ui.classList.remove("hidden");
   showOnly(screenMenu);
-  stopMove();
-}
-
-function openDaily() {
-  state = "daily";
-  overlay.classList.add("hidden");
-  ui.classList.remove("hidden");
-  showOnly(screenDaily);
   stopMove();
 }
 

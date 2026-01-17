@@ -30,17 +30,26 @@
         </div>
 
         <!-- DAILY -->
-        <div id="screen-daily" class="screen hidden">
-          <div class="card">
-            <div class="title">Daily Challenge</div>
-            <div class="subtitle">Coming soon</div>
-            <div class="small">
-              (Placeholder) Here we will add a daily goal like:
-              “Survive 45s” or “Dodge 30 candles” for bonus XP.
-            </div>
-            <button id="btnBackFromDaily" class="btn">Back</button>
-          </div>
-        </div>
+<div id="screen-daily" class="screen hidden">
+  <h2>Daily Challenge</h2>
+
+  <div id="dailyCard" style="background: rgba(0,0,0,0.35); padding: 12px 14px; border-radius: 14px;">
+    <div id="dailyTitle" style="font-weight: 700; margin-bottom: 6px;">Loading…</div>
+    <div id="dailyDesc" style="opacity: 0.9; margin-bottom: 10px;">—</div>
+
+    <div style="display:flex; justify-content: space-between; gap: 10px; margin-bottom: 10px;">
+      <div><span style="opacity:0.8;">Progress:</span> <span id="dailyProgress">0 / 0</span></div>
+      <div><span style="opacity:0.8;">Reward:</span> <span id="dailyReward">0 XP</span></div>
+    </div>
+
+    <div id="dailyStatus" style="opacity: 0.85; margin-bottom: 10px;">Play to make progress.</div>
+
+    <button id="dailyClaimBtn" disabled>Claim</button>
+  </div>
+
+  <button id="btnBackFromDaily" class="menu-btn">Back</button>
+</div>
+
 
         <!-- SHOP -->
         <div id="screen-shop" class="screen hidden">
