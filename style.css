@@ -1,155 +1,176 @@
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    overflow: hidden;
-    background: #111;
-    touch-action: none;
-    font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #0f0f0f;
+  touch-action: none;
+  font-family: Arial, sans-serif;
 }
 
+/* App centers the playfield */
+#app {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Constrained playfield width (prevents "too wide" feeling) */
 #game-wrap {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+  position: relative;
+  width: min(420px, 100vw);
+  height: 100vh;
+  background: #111;
 }
 
+/* Canvas fills the playfield area */
 canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* UI Overlay */
 #ui {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.55);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
 }
 
 .screen {
-    width: min(420px, 92vw);
+  width: min(420px, 92vw);
 }
 
 .hidden {
-    display: none !important;
+  display: none !important;
 }
 
 .card {
-    background: rgba(20,20,20,0.92);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 18px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
+  background: rgba(20,20,20,0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: stretch;
 }
 
 .title {
-    color: #fff;
-    font-size: 34px;
-    font-weight: 800;
-    text-align: center;
-    letter-spacing: 0.5px;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.5px;
 }
 
 .subtitle {
-    color: rgba(255,255,255,0.75);
-    font-size: 14px;
-    text-align: center;
-    margin-top: -8px;
-    margin-bottom: 6px;
+  color: rgba(255,255,255,0.75);
+  font-size: 14px;
+  text-align: center;
+  margin-top: -8px;
+  margin-bottom: 6px;
 }
 
 .hint {
-    color: rgba(255,255,255,0.65);
-    font-size: 12px;
-    text-align: center;
-    margin-top: 6px;
+  color: rgba(255,255,255,0.65);
+  font-size: 12px;
+  text-align: center;
+  margin-top: 6px;
 }
 
 .btn {
-    appearance: none;
-    border: 1px solid rgba(255,255,255,0.18);
-    background: rgba(255,255,255,0.06);
-    color: #fff;
-    padding: 12px 14px;
-    border-radius: 14px;
-    font-size: 18px;
-    font-weight: 700;
-    cursor: pointer;
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
 }
 
 .btn.primary {
-    border: none;
-    background: rgba(255, 212, 0, 0.95);
-    color: #111;
+  border: none;
+  background: rgba(255, 212, 0, 0.95);
+  color: #111;
 }
 
 .row {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    color: rgba(255,255,255,0.85);
-    font-size: 14px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: rgba(255,255,255,0.85);
+  font-size: 14px;
 }
 
 .small {
-    color: rgba(255,255,255,0.65);
-    font-size: 12px;
-    line-height: 1.35;
+  color: rgba(255,255,255,0.65);
+  font-size: 12px;
+  line-height: 1.35;
 }
 
-/* Shop color grid */
-.color-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    width: 100%;
+/* Shop: show BALL buttons (not color blocks) */
+.ball-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
 }
 
-.color-btn {
-    height: 44px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.18);
-    cursor: pointer;
+.ball-btn {
+  height: 58px;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
 }
 
-.color-btn.selected {
-    outline: 3px solid rgba(255,255,255,0.85);
+.ball-btn.selected {
+  outline: 3px solid rgba(255,255,255,0.85);
+}
+
+.ball-preview {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.25);
 }
 
 /* Game Over Overlay */
 #overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0,0,0,0.55);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
 }
 
 .overlay-card {
-    width: min(420px, 92vw);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-    padding: 22px;
-    border-radius: 18px;
-    background: rgba(20,20,20,0.92);
-    border: 1px solid rgba(255,255,255,0.12);
+  width: min(420px, 92vw);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  padding: 22px;
+  border-radius: 18px;
+  background: rgba(20,20,20,0.92);
+  border: 1px solid rgba(255,255,255,0.12);
 }
 
 .overlay-title {
-    color: white;
-    font-size: 32px;
-    font-weight: 800;
-    text-align: center;
-    letter-spacing: 1px;
+  color: white;
+  font-size: 32px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 1px;
 }

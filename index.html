@@ -1,82 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Seeker Ball</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Seeker Ball</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="app">
     <div id="game-wrap">
-        <canvas id="game"></canvas>
+      <canvas id="game"></canvas>
 
-        <!-- UI Overlay (Menu / Shop / Settings) -->
-        <div id="ui">
-            <!-- MENU -->
-            <div id="screen-menu" class="screen">
-                <div class="card">
-                    <div class="title">Seeker Ball</div>
-                    <div class="subtitle">Mobile-only Endless Runner</div>
+      <!-- UI Overlay (Menu / Shop / Settings / Daily / NFT) -->
+      <div id="ui">
+        <!-- MENU -->
+        <div id="screen-menu" class="screen">
+          <div class="card">
+            <div class="title">Seeker Ball</div>
+            <div class="subtitle">Mobile-only Endless Runner</div>
 
-                    <button id="btnPlay" class="btn primary">Play</button>
-                    <button id="btnShop" class="btn">Shop (Balls)</button>
-                    <button id="btnSettings" class="btn">Settings</button>
+            <button id="btnPlay" class="btn primary">Play</button>
+            <button id="btnDaily" class="btn">Daily Challenge</button>
+            <button id="btnShop" class="btn">Shop (Balls)</button>
+            <button id="btnNft" class="btn">NFT Shop / Mint</button>
+            <button id="btnSettings" class="btn">Settings</button>
 
-                    <div class="hint">Tip: Tap left/right to move</div>
-                </div>
-            </div>
-
-            <!-- SHOP -->
-            <div id="screen-shop" class="screen hidden">
-                <div class="card">
-                    <div class="title">Shop (Colors)</div>
-                    <div class="subtitle">Pick your ball color (no pay2win)</div>
-
-                    <div id="colorGrid" class="color-grid">
-                        <!-- buttons created by JS -->
-                    </div>
-
-                    <div class="row">
-                        <div class="label">Selected:</div>
-                        <div id="selectedColorName" class="value">Gold</div>
-                    </div>
-
-                    <button id="btnBackFromShop" class="btn">Back</button>
-                </div>
-            </div>
-
-            <!-- SETTINGS -->
-            <div id="screen-settings" class="screen hidden">
-                <div class="card">
-                    <div class="title">Settings</div>
-                    <div class="subtitle">Keep it fair</div>
-
-                    <div class="row">
-                        <div class="label">Speed increase:</div>
-                        <div id="speedValue" class="value">2</div>
-                    </div>
-
-                    <input id="speedSlider" type="range" min="0" max="4" step="1" value="2">
-
-                    <div class="small">
-                        0 = no increase, 1 = very slow, 2 = slow (recommended), 3 = medium, 4 = faster
-                    </div>
-
-                    <button id="btnBackFromSettings" class="btn">Back</button>
-                </div>
-            </div>
+            <div class="hint">Tip: Tap left/right to move</div>
+          </div>
         </div>
 
-        <!-- Game Over Overlay -->
-        <div id="overlay" class="hidden">
-            <div class="overlay-card">
-                <div class="overlay-title">GAME OVER</div>
-                <button id="restartBtn" class="btn primary">Restart</button>
-                <button id="menuBtn" class="btn">Menu</button>
+        <!-- DAILY -->
+        <div id="screen-daily" class="screen hidden">
+          <div class="card">
+            <div class="title">Daily Challenge</div>
+            <div class="subtitle">Coming soon</div>
+            <div class="small">
+              (Placeholder) Here we will add a daily goal like:
+              “Survive 45s” or “Dodge 30 candles” for bonus XP.
             </div>
+            <button id="btnBackFromDaily" class="btn">Back</button>
+          </div>
         </div>
+
+        <!-- SHOP -->
+        <div id="screen-shop" class="screen hidden">
+          <div class="card">
+            <div class="title">Shop (Balls)</div>
+            <div class="subtitle">Pick your ball (colors only)</div>
+
+            <div id="colorGrid" class="ball-grid"></div>
+
+            <div class="row">
+              <div class="label">Selected:</div>
+              <div id="selectedColorName" class="value">Gold</div>
+            </div>
+
+            <button id="btnBackFromShop" class="btn">Back</button>
+          </div>
+        </div>
+
+        <!-- NFT -->
+        <div id="screen-nft" class="screen hidden">
+          <div class="card">
+            <div class="title">NFT Shop / Mint</div>
+            <div class="subtitle">Coming later (no pay2win)</div>
+            <div class="small">
+              NFTs will be skins only. Same gameplay stats as the best XP-shop ball.
+              We will add wallet integration later.
+            </div>
+            <button id="btnBackFromNft" class="btn">Back</button>
+          </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="screen-settings" class="screen hidden">
+          <div class="card">
+            <div class="title">Settings</div>
+            <div class="subtitle">Keep it fair</div>
+
+            <div class="row">
+              <div class="label">Speed increase:</div>
+              <div id="speedValue" class="value">2</div>
+            </div>
+
+            <input id="speedSlider" type="range" min="0" max="4" step="1" value="2">
+
+            <div class="small">
+              0 = no increase, 1 = very slow, 2 = slow (recommended), 3 = medium, 4 = faster
+            </div>
+
+            <button id="btnBackFromSettings" class="btn">Back</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Game Over Overlay -->
+      <div id="overlay" class="hidden">
+        <div class="overlay-card">
+          <div class="overlay-title">GAME OVER</div>
+          <button id="restartBtn" class="btn primary">Restart</button>
+          <button id="menuBtn" class="btn">Menu</button>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script src="game.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
