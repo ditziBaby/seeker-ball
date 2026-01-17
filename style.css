@@ -174,3 +174,53 @@ canvas {
   text-align: center;
   letter-spacing: 1px;
 }
+/* --- Shop readability --- */
+#screen-shop, #screen-shop * {
+  color: rgba(255,255,255,0.92);
+}
+
+#shopTop {
+  background: rgba(0,0,0,0.35);
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+#shopInfo {
+  background: rgba(0,0,0,0.25);
+  padding: 8px 12px;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+#buyBtn {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.92);
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
+#buyBtn:disabled {
+  opacity: 0.45;
+}
+/* --- Shop: locked balls (not purchased) --- */
+.ball-btn.locked .ball-preview {
+  filter: grayscale(100%) brightness(0.55);
+  opacity: 0.6;
+}
+
+/* kleines Schloss-Feeling (optional, nur Optik) */
+.ball-btn.locked::after {
+  content: "🔒";
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+/* ausgewählter / ausgerüsteter Ball */
+.ball-btn.selected {
+  outline: 2px solid rgba(255,255,255,0.8);
+  box-shadow: 0 0 10px rgba(255,255,255,0.25);
+}
