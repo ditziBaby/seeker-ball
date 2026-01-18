@@ -1,5 +1,10 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
+// Make sure the canvas never blocks menu clicks.
+// Canvas should only capture touches/clicks while playing.
+function setCanvasInteractive(isInteractive) {
+  canvas.style.pointerEvents = isInteractive ? "auto" : "none";
+}
 
 // UI elements
 const ui = document.getElementById("ui");
@@ -433,6 +438,7 @@ function showOnly(screen) {
 
 function openMenu() {
   state = "menu";
+  setCanvasInteractive(false);
   overlay.classList.add("hidden");
   ui.classList.remove("hidden");
   showOnly(screenMenu);
@@ -441,6 +447,7 @@ function openMenu() {
 
 function openDaily() {
   state = "daily";
+  setCanvasInteractive(false);
   overlay.classList.add("hidden");
   ui.classList.remove("hidden");
   updateDailyUI(); // ✅ only addition: refresh daily screen UI
@@ -450,6 +457,7 @@ function openDaily() {
 
 function openShop() {
   state = "shop";
+  setCanvasInteractive(false);
   overlay.classList.add("hidden");
   ui.classList.remove("hidden");
 
@@ -463,6 +471,7 @@ function openShop() {
 
 function openNft() {
   state = "nft";
+  setCanvasInteractive(false);
   overlay.classList.add("hidden");
   ui.classList.remove("hidden");
   showOnly(screenNft);
@@ -471,6 +480,7 @@ function openNft() {
 
 function openSettings() {
   state = "settings";
+  setCanvasInteractive(false);
   overlay.classList.add("hidden");
   ui.classList.remove("hidden");
   speedSlider.value = String(SPEED_INCREASE);
@@ -482,6 +492,7 @@ function openSettings() {
 function startGame() {
   resetGame();
   state = "playing";
+  setCanvasInteractive(true);
   ui.classList.add("hidden");
   overlay.classList.add("hidden");
 }
@@ -787,6 +798,7 @@ function drawBallRainbow(x, y, r, t, rot) {
 let last = performance.now();
 let timeAlive = 0;
 let score = 0;
+let dailyToastTimer = 0;
 
 function resetGame() {
   obstacles.length = 0;
@@ -806,7 +818,8 @@ function resetGame() {
 }
 
 function update(dt) {
-  if (state !== "playing") return;
+ if (state === "playing") setCanvasInteractive(true);
+ if (state !== "playing") return;
 
   timeAlive += dt;
   score += dt * 10;
@@ -852,24 +865,34 @@ function update(dt) {
         addXP(GREEN_BONUS_XP);
         obstacles.splice(i, 1);
       } else {
-        state = "gameover";
-        stopMove();
-        overlay.classList.remove("hidden");
+      state = "gameover";
+setCanvasInteractive(false);
+stopMove();
+overlay.classList.remove("hidden");
+
       }
       break;
     }
   }
 
-  // Daily progress update (best time survived today)
-  ensureDaily();
-  if (!daily.claimed) {
-    const secs = Math.floor(timeAlive);
-    if (secs > daily.bestSec) {
-      daily.bestSec = secs;
-      saveDaily();
-      // (UI update only when you open Daily screen)
+// Daily progress update (best time survived today)
+ensureDaily();
+if (!daily.claimed) {
+  const secs = Math.floor(timeAlive);
+  if (secs > daily.bestSec) {
+    daily.bestSec = secs;
+    saveDaily();
+
+    // show toast once when completed
+    if (daily.bestSec === daily.targetSec) {
+      dailyToastTimer = 2.0; // seconds
     }
   }
+}
+
+// countdown toast timer
+if (dailyToastTimer > 0) dailyToastTimer -= dt;
+
 }
 
 function drawHUD(spd) {
@@ -886,6 +909,28 @@ function drawHUD(spd) {
   ctx.fillText(`Score: ${Math.floor(score)}`, x + 10, y + 44);
   ctx.fillText(`XP: ${Math.floor(totalXP)}`, x + 10, y + 64);
   ctx.fillText(`Speed: ${Math.round(spd)}`, x + 110, y + 64);
+  // Daily toast
+ensureDaily();
+if (!daily.claimed && daily.bestSec >= daily.targetSec && dailyToastTimer > 0) {
+  const msg = "Daily Completed ✅";
+  ctx.font = "14px Arial";
+  const pad = 10;
+  const tw = ctx.measureText(msg).width;
+  const boxW = tw + pad * 2;
+  const boxH = 30;
+
+  const x = (playW() - boxW) / 2;
+  const y = 10;
+
+  ctx.fillStyle = "rgba(0,0,0,0.55)";
+  ctx.fillRect(x, y, boxW, boxH);
+
+  ctx.fillStyle = "rgba(255,255,255,0.95)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(msg, x + boxW / 2, y + boxH / 2);
+}
+
 }
 
 function draw(dt) {
@@ -931,6 +976,7 @@ function showOnly(screen) {
 
 function openMenu() {
   state = "menu";
+  setCanvasInteractive(false);
   overlay.classList.add("hidden");
   ui.classList.remove("hidden");
   showOnly(screenMenu);
